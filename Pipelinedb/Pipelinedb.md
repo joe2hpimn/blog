@@ -9,9 +9,9 @@ wget ftp://mirrors.kernel.org/gnu/gcc/gcc-6.3.0/gcc-6.3.0.tar.gz
 tar -zxvf gcc-6.3.0.tar.gz
 
 ### 3.下载编译所需依赖项
-cd gcc-6.3.0     					//进入解包后的gcc文件夹
-./contrib/download_prerequisites	//下载依赖项
-cd ..                          		//返回上层目录
+cd gcc-6.3.0     					//进入解包后的gcc文件夹  
+./contrib/download_prerequisites	//下载依赖项   
+cd ..                          		//返回上层目录  
 
 ### 4.建立编译输出目录
 mkdir gcc-build-6.3.0
