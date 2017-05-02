@@ -109,3 +109,5 @@ export USE_NAMED_POSIX_SEMAPHORES=1
 LIBS=-lpthread CC="/opt/gcc6/bin/gcc" CFLAGS="-O3 -flto" PYTHON=/data/pipelinedb/python/bin/python ./configure --prefix=/data/pipelinedb --with-python   
 make world -j 32     
 make install-world    
+
+`--with-python` 是为了支持pl/pythonu，默认centos6（RHEL6）的python是2.6，我们可以自行编译python2.7，并将其打包到Pipelinedb的安装目录。例如`/data/pipelinedb/python`,python2.7的编译过程请查看 [Python2.7编译指南](https://github.com/joe2hpimn/blog/blob/master/Pipelinedb/%E7%BC%96%E8%AF%91Python2.7.md)
