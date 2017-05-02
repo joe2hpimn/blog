@@ -13,8 +13,9 @@ tar zxvf Python-2.7.11.tgz
 cd Python-2.7.11  
 
 ## 4、编译安装
-./configure --prefix=/usr/local/python --enable-shared  
-make && make install
+./configure --prefix=/data/pipelinedb/python --enable-shared  
+make && make install     
+注：必须指定`--enable-shared`，否则在编译Pipelinedb时会出错。
 
 ## 5、直接调用
 /usr/local/python/bin/python  
