@@ -92,12 +92,12 @@ vi src/test/unit/test_fss.c
 
 ## 五 Makefile修正
 >由于pipelinedb的Makefile指定了zeromq的静态路径，因此需要修复libzmq.a路径错误。
-libzmq.a的路径修正操作如下。
-vi src/Makefile.global.in
+>libzmq.a的路径修正操作如下。
+>vi src/Makefile.global.in
 
-LIBS := -lpthread /opt/pipelinedb/lib/libzmq.a -lstdc++ $(LIBS)
+>LIBS := -lpthread /opt/pipelinedb/lib/libzmq.a -lstdc++ $(LIBS)
 
-修改libzmp.a到实际的地址。
+>修改libzmp.a到实际的地址。
 
 ## 六 修复test_decoding错误
 >cd contrib/test_decoding
