@@ -2,7 +2,8 @@
 
 ## 1、安装编译环境
 
-yum groupinstall "Development tools"   
+yum groupinstall "Development tools"    
+可直接将GCC升级到4.8或以上版本，如果已安装高版本的GCC可以略过该步骤。
 
 ## 2、安装依赖的包
 yum install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel   
