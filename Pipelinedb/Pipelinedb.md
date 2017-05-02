@@ -3,10 +3,10 @@
 为了获得更好的性能，建议安装最新版的GCC编译器。
 
 ### 1.下载GCC源码
->wget ftp://mirrors.kernel.org/gnu/gcc/gcc-6.3.0/gcc-6.3.0.tar.gz
+wget ftp://mirrors.kernel.org/gnu/gcc/gcc-6.3.0/gcc-6.3.0.tar.gz
 
 ### 2.解压
->tar -zxvf gcc-6.3.0.tar.gz
+tar -zxvf gcc-6.3.0.tar.gz
 
 ### 3.下载编译所需依赖项
 >cd gcc-6.3.0     					//进入解包后的gcc文件夹
