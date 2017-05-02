@@ -20,7 +20,7 @@ mkdir gcc-build-6.3.0
 ### 5.生成makefile文件
 mkdir -p /opt/gcc6
 cd gcc-build-6.3.0
-../gcc-6.3.0/configure --enable-checking=release --enable-languages=c,c++ --disable-multilib --prefix=/opt/gcc6
+../gcc-6.3.0/configure --enable-checking=release --enable-languages=c,c++ --disable-multilib --prefix=/opt/gcc6    
 注意：为了不对操作系统的运行造成影响，需要添加参数“--prefix=/opt/gcc6”将gcc安装到自定义目录。
 
 ### 6.编译
