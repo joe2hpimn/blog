@@ -19,10 +19,10 @@ make && make install
 注：必须指定`--enable-shared`，否则在编译Pipelinedb时会出错。
 
 ## 5、直接调用
-/usr/local/python/bin/python  
+/data/pipelinedb/python/bin/python  
 
 ## 6、替换旧版本
-ln -sf /usr/local/python/bin/python /usr/bin/python   
+ln -sf /data/pipelinedb/python/bin/python /usr/bin/python   
 
 ## 7、查看版本
 python -V    
