@@ -75,17 +75,17 @@ pg_ctl stop -m fast -Z datanode -D /home/dbadmin/pgxl/d11924/pg_root
 gtm_ctl stop -m fast -Z gtm -D /home/dbadmin/pgxl/g11926
 
 ## postgresql.conf
-listen_addresses = '0.0.0.0'          # what IP address(es) to listen on;   
-port = 11924                            # (change requires restart)   
-max_connections = 500                   # (change requires restart)   
-superuser_reserved_connections = 13     # (change requires restart)   
-unix_socket_directory = '.'             # (change requires restart)   
-unix_socket_permissions = 0700          # begin with 0 to use octal notation   
-tcp_keepalives_idle = 60                # TCP_KEEPIDLE, in seconds;   
-tcp_keepalives_interval = 10            # TCP_KEEPINTVL, in seconds;   
-tcp_keepalives_count = 10               # TCP_KEEPCNT;   
-shared_buffers = 2048MB                 # min 128kB   
-max_prepared_transactions = 500         # zero disables the feature   
+> listen_addresses = '0.0.0.0'            # what IP address(es) to listen on;   
+port = 11924                              # (change requires restart)   
+max_connections = 500                     # (change requires restart)   
+superuser_reserved_connections = 13       # (change requires restart)   
+unix_socket_directory = '.'               # (change requires restart)   
+unix_socket_permissions = 0700            # begin with 0 to use octal notation   
+tcp_keepalives_idle = 60                  # TCP_KEEPIDLE, in seconds;   
+tcp_keepalives_interval = 10                  # TCP_KEEPINTVL, in seconds;   
+tcp_keepalives_count = 10                               # TCP_KEEPCNT;   
+shared_buffers = 2048MB                                 # min 128kB   
+max_prepared_transactions = 500                         # zero disables the feature   
 shared_preload_libraries = 'pg_stat_statements'         # (change requires restart)   
 vacuum_cost_delay = 10ms                # 0-100 milliseconds   
 vacuum_cost_limit = 10000               # 1-10000 credits   
