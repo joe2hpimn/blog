@@ -1,4 +1,8 @@
 # Linux下Postgres-XL编译安装  
+## 安装依赖包
+```
+yum -y install lrzsz sysstat e4fsprogs ntp readline-devel zlib zlib-devel openssl openssl-devel pam-devel libxml2-devel libxslt-devel python-devel tcl-devel gcc make smartmontools flex bison perl perl-devel perl-ExtUtils* OpenIPMI-tools openldap openldap-devel
+```
 ## Postgres-XL编译
 ```
 wget http://downloads.sourceforge.net/project/postgres-xl/Releases/Version_9.2rc/postgres-xl-v9.2-src.tar.gz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fpostgres-xl%2F&ts=1406180225&use_mirror=jaist     
