@@ -1,7 +1,8 @@
 # Linux下Postgres-XL编译安装  
 ## Postgres-XL编译
 ```
-./configure --prefix=/opt/pgxl9.2 --with-pgport=11921 --with-perl --with-tcl --with-python --with-openssl --with-pam --without-ldap --with-libxml --with-libxslt --enable-thread-safety --enable-dtrace --enable-debug --enable-cassert  
+wget http://downloads.sourceforge.net/project/postgres-xl/Releases/Version_9.2rc/postgres-xl-v9.2-src.tar.gz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fpostgres-xl%2F&ts=1406180225&use_mirror=jaist     
+./configure --prefix=/opt/pgxl9.2 --with-pgport=11921 --with-perl --with-tcl --with-python --with-openssl --with-pam --without-ldap --with-libxml --with-libxslt --enable-thread-safety --enable-dtrace --enable-debug --enable-cassert  
 gmake world   
 gmake world install
 ```
