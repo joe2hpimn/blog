@@ -1,19 +1,25 @@
 # Linux下Postgres-XL编译安装  
 ## Postgres-XL编译
+```
 ./configure --prefix=/opt/pgxl9.2 --with-pgport=11921 --with-perl --with-tcl --with-python --with-openssl --with-pam --without-ldap --with-libxml --with-libxslt --enable-thread-safety --enable-dtrace --enable-debug --enable-cassert  
 gmake world   
 gmake world install
-
+```
 ## 创建dbadmin用户与数据目录
-useradd dbadmin    
+```
+useradd dbadmin
+```
 ### coordinator节点    
+```
 mkdir -p /home/dbadmin/pgxl/c11921   
 chown -R pgxl:pgxl /home/dbadmin/pgxl
-
+```
 ### gtm 节点 
+```
 mkdir -p /home/dbadmin/pgxl/g11926
-
+```
 ## 环境变量
+```
 export PGDATA=/home/dbadmin/pgxl/c11921/pg_root   
 export LANG=en_US.utf8    
 export PGHOME=/opt/pgxl9.2    
@@ -25,12 +31,16 @@ export PGHOST=$PGDATA
 export PGPORT=11921    
 export PGUSER=postgres    
 export PGDATABASE=pg_tds
+```
 
 ## 节点初始化
+```
 initdb -D /home/dbadmin/pgxl/c11921/pg_root --nodename=c11921 -E UTF8 --locale=C -U postgres -W     
 initgtm -Z gtm -D /home/dbadmin/pgxl/g11926
+```
 
 #### datanode节点与其他节点
+```
 mkdir -p /home/dbadmin/pgxl/d11922  
 mkdir -p /home/dbadmin/pgxl/d11923  
 mkdir -p /home/dbadmin/pgxl/d11924   
@@ -44,8 +54,9 @@ host all all 10.248.112.106/32 trust
 host all all 10.248.112.105/32 trust   
 host all all 10.248.112.104/32 trust   
 host all all 10.248.112.103/32 trust
-
+```
 ## 启动集群
+```
 1:gtm_ctl -Z gtm start -D /home/dbadmin/pgxl/g11926   
 2:pg_ctl start -Z datanode -D /home/dbadmin/pgxl/d11922/pg_root   
 3:pg_ctl start -Z datanode -D /home/dbadmin/pgxl/d11923/pg_root   
@@ -66,14 +77,15 @@ create node group gp1 with (d11922, d11923, d11924);
 
 SELECT pgxc_pool_reload();    
 create table t1(id serial8 primary key, info text, crt_time timestamp) distribute by hash(id) to group gp1;
-
+```
 ## 关闭集群
+```
 pg_ctl stop -m fast -Z coordinator -D /home/dbadmin/pgxl/c11921/pg_root  
 pg_ctl stop -m fast -Z datanode -D /home/dbadmin/pgxl/d11922/pg_root  
 pg_ctl stop -m fast -Z datanode -D /home/dbadmin/pgxl/d11923/pg_root   
 pg_ctl stop -m fast -Z datanode -D /home/dbadmin/pgxl/d11924/pg_root   
 gtm_ctl stop -m fast -Z gtm -D /home/dbadmin/pgxl/g11926
-
+```
 ## postgresql.conf
 ```
 listen_addresses = '0.0.0.0'                  # what IP address(es) to listen on;   
