@@ -5,9 +5,10 @@
 gmake world   
 gmake world install
 ```
-## 创建dbadmin用户与数据目录
+## 创建pgxl用户与数据目录
 ```
-useradd dbadmin
+useradd pgxl
+# 也可以是其他用户名，按需配置
 ```
 ### coordinator节点    
 ```
