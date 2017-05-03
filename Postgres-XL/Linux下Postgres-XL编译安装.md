@@ -6,6 +6,86 @@ wget http://downloads.sourceforge.net/project/postgres-xl/Releases/Version_9.2rc
 gmake world   
 gmake world install
 ```
+## 系统配置
+### 时钟
+```
+crontab -e
+-- 8 * * * * /usr/sbin/ntpdate asia.pool.ntp.org && /sbin/hwclock --systohc
+/usr/sbin/ntpdate asia.pool.ntp.org && /sbin/hwclock --systohc
+```
+
+### 时区
+```
+vi /etc/sysconfig/clock 
+  -- ZONE="Asia/Shanghai"
+     UTC=false
+     ARC=false
+
+rm /etc/localtime 
+cp /usr/share/zoneinfo/PRC /etc/localtime
+``` 
+### 编码
+```
+vi /etc/sysconfig/i18n
+  -- LANG="en_US.UTF-8"
+```
+
+### ssh配置
+```
+vi /etc/ssh/sshd_config
+UseDNS no
+PubkeyAuthentication no
+
+vi /etc/ssh/ssh_config
+GSSAPIAuthentication no
+```
+
+### 内核参数
+```
+vi /etc/sysctl.conf
+kernel.shmmni = 4096
+kernel.sem = 50100 64128000 50100 1280
+fs.file-max = 7672460
+net.ipv4.ip_local_port_range = 9000 65000
+net.core.rmem_default = 1048576
+net.core.rmem_max = 4194304
+net.core.wmem_default = 262144
+net.core.wmem_max = 1048576
+net.ipv4.tcp_tw_recycle = 1
+net.ipv4.tcp_max_syn_backlog = 4096
+net.core.netdev_max_backlog = 10000
+vm.overcommit_memory = 0
+net.ipv4.ip_conntrack_max = 655360
+fs.aio-max-nr = 1048576
+net.ipv4.tcp_timestamps = 0
+```
+
+### 限制
+```
+vi /etc/security/limits.conf
+* soft    nofile  131072
+* hard    nofile  131072
+* soft    nproc   131072
+* hard    nproc   131072
+* soft    core    unlimited
+* hard    core    unlimited
+* soft    memlock 50000000
+* hard    memlock 50000000
+
+vi /etc/security/limits.d/90-nproc.conf 
+# 注释所有其他, 并添加
+* soft    nproc   131072
+* hard    nproc   131072
+```
+
+### 配置selinux
+```
+vi /etc/sysconfig/selinux
+SELINUX=disabled
+
+vi /etc/sysconfig/iptables
+# 允许各节点相互通信
+```
 ## 创建pgxl用户与数据目录
 ```
 useradd pgxl
