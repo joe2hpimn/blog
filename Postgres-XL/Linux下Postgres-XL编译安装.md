@@ -18,6 +18,7 @@ chown -R pgxl:pgxl /home/dbadmin/pgxl
 ### gtm 节点 
 ```
 mkdir -p /home/dbadmin/pgxl/g11926
+# 一般情况下不需要配置gtm-proxy节点，除非考虑到高负载的情况
 ```
 ## 环境变量
 ```
