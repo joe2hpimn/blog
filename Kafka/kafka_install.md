@@ -117,7 +117,7 @@ export KAFKA_HEAP_OPTS="-Xmx8G –Xms8G"
 export JAAS_CONFIG="-Djava.security.auth.login.config=/opt/sasl/kafka_client_jaas.conf"
 ```
 
-### 3.3配置SASL/PLAIN安全认证
+### 3.3 配置SASL/PLAIN安全认证
 
 ---
 1.在每台kafka服务器上都新建kafka_server_jaas.conf文件，写入如下内容：
@@ -178,7 +178,7 @@ default.replication.factor=3
 unclean.leader.election.enable=false
 num.replica.fetchers=15
 
-### 3.3 启动程序并初始化
+### 3.4 启动程序并初始化
 
 1.使用scp命令分发程序包到各个节点
 
@@ -226,7 +226,7 @@ nohup ./connect-distributed ../etc/schema-registry/connect-avro-distributed.prop
 
 查看进程发现**ConnectDistributed**进程既启动成功
 
-### 3.4 验证kafka是否安装成功
+### 3.5 验证kafka是否安装成功
 
 1.新建测试主题
 
