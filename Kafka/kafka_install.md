@@ -53,30 +53,55 @@ ln –s /data/confluent-5.0.0 /data/confluent
 ---
 
 **3.修改server.properties**  
-修改`/data/confluent/etc/kafka/server.properties`文件  
-`log.dirs=/data/kafka-logs` （kafka日志路径，需要先创建好路径）
-`zookeeper.connect=localhost:2181` (zookeeper地址，逗号隔开)
+`Tips:ZK需要自行安装或直接用confluent自带的ZK，具体安装细节略`
+
+```sh
+vi /data/confluent/etc/kafka/server.properties
+# kafka日志路径，需要先创建好路径
+log.dirs=/data/kafka-logs
+zookeeper.connect=localhost:2181
+# zookeeper地址，逗号隔开
+```
 
 ---
 **4.修改内存设置**  
-修改/data/confluent/bin/kafka-server-start文件KAFKA_HEAP_OPTS="-Xmx1G -Xms1G" 两个参数都修改为16G即可；  
-再修改/data/confluent/bin/kafka-run-class文件  
-KAFKA_HEAP_OPTS="-Xmx256M" 这里需要修改成2048M`
+`Tips:Java堆内存大小需根据机器的配置而定`
+
+```sh
+vi /data/confluent/bin/kafka-server-start
+# 两个参数都修改为8G即可
+KAFKA_HEAP_OPTS="-Xmx8G -Xms8G"
+vi /data/confluent/bin/kafka-run-class  
+# 这里需要修改成2048M
+KAFKA_HEAP_OPTS="-Xmx2048M"
+```
 
 ---
 **5.修改schema-registry.properties**  
-/data/confluent/etc/schema-registry/schema-registry.properties
-kafkastore.connection.url=localhost:2181 (zookeeper地址)
-如果8081端口被占用，还需要修改listeners=http://0.0.0.0:8081
+`Tips:启动schema-registry以支持Avro格式kafka消息的发送和接收`
+
+```sh
+vi /data/confluent/etc/schema-registry/schema-registry.properties
+# ZK地址需要根据实际情况修改
+kafkastore.connection.url=localhost:2181
+# 如果8081端口被占用，还需要修改
+listeners=http://0.0.0.0:8581
+# 增加SASL/PLAIN认证配置
 kafkastore.security.protocol=SASL_PLAINTEXT
 kafkastore.sasl.mechanism=PLAIN
-在最后一行加上avro.compatibility.level=none。
+# 避免新schema保持增加如下设置
+avro.compatibility.level=none
+```
 
 ---
-**6.修改connect-avro-distributed.properties**
-/opt/confluent/etc/schema-registry/ connect-avro-distributed.properties
-bootstrap.servers=localhost:9094 (kafka集群地址，逗号隔开)
-加上如下配置：
+**6.修改connect-avro-distributed.properties**  
+`Tips:producer与consumer都要进行sasl配置`
+
+```sh
+vi /data/confluent/etc/schema-registry/connect-avro-distributed.properties
+# kafka集群地址，逗号隔开
+bootstrap.servers=192.168.1.220:9094,192.168.1.176:9094,192.168.1.194:9094
+# 增加如下配置：
 offset.flush.interval.ms=1000
 security.protocol=SASL_PLAINTEXT
 sasl.mechanism=PLAIN
@@ -84,17 +109,20 @@ producer.security.protocol=SASL_PLAINTEXT
 producer.sasl.mechanism=PLAIN
 consumer.security.protocol=SASL_PLAINTEXT
 consumer.sasl.mechanism=PLAIN
-如果刚才修改了第5步中的端口，还需要修改如下两个配置的端口
-key.converter.schema.registry.url=http://localhost:8081
-value.converter.schema.registry.url=http://localhost:8081
+# 如果刚才修改了schema-registry的listeners端口，还需要修改如下两个配置的端口
+key.converter.schema.registry.url=http://localhost:8581
+value.converter.schema.registry.url=http://localhost:8581
+```
 
 ---
-**7.修改schema-registry-run-class**
-/confluent/bin/schema-registry-run-class文件
-在# Launch mode面加上如下代码：  
-JAAS_CONFIG="-Djava.security.auth.login.config=/opt/sasl/kafka_client_jaas.conf"（这个路径是前面建的client jaas文件路径） "#Launch mode"下的if else代码修改成如下：
+**7.修改schema-registry-run-class**  
+`Tips:kafka_client_jaas.conf路径是前面建的client jaas文件路径`
 
 ```sh
+vi /data/confluent/bin/schema-registry-run-class
+# #Launch mode之前增加如下代码：  
+JAAS_CONFIG="-Djava.security.auth.login.config=/opt/sasl/kafka_client_jaas.conf" 
+# #Launch mode下面的if else代码修改成如下：
 if [ "x$DAEMON_MODE" = "xtrue" ]; then
   nohup $JAVA $SCHEMA_REGISTRY_HEAP_OPTS $SCHEMA_REGISTRY_JVM_PERFORMANCE_OPTS $SCHEMA_REGISTRY_JMX_OPTS $SCHEMA_REGISTRY_LOG4J_OPTS $JAAS_CONFIG -cp $CLASSPATH $SCHEMA_REGISTRY_OPTS "$MAIN" "$@" 2>&1 < /dev/null &
 else
@@ -104,16 +132,12 @@ fi
 
 ---
 **8.修改connect-distributed**  
-/data/confluent/bin/connect-distributed文件，
-在倒数第二行加上如下代码（在export CLASSPATH代码的下一行）：
+`Tips:Java堆内存请跟进实际情况调整`
 
 ```sh
+vi /data/confluent/bin/connect-distributed
+# 在倒数第二行新增如下代码：
 export KAFKA_HEAP_OPTS="-Xmx8G –Xms8G"
-```
-
-在倒数第二行新增如下代码：
-
-```sh
 export JAAS_CONFIG="-Djava.security.auth.login.config=/opt/sasl/kafka_client_jaas.conf"
 ```
 
@@ -163,20 +187,24 @@ exec $JAVA $KAFKA_HEAP_OPTS $KAFKA_JVM_PERFORMANCE_OPTS $KAFKA_GC_LOG_OPTS $KAFK
 ```
 
 ---
-4.修改server.propertiesconfluen/etc/kafka/server.properties文件
-修改如下配置：  
-listeners= SASL_PLAINTEXT://hostname:9094  
-advertised.listeners= SASL_PLAINTEXT://hostname:9094  
+4.修改server.properties  
+
+```sh
+vi confluen/etc/kafka/server.properties
+# 修改如下配置  
+listeners=SASL_PLAINTEXT://192.168.1.220:9094  
+advertised.listeners=SASL_PLAINTEXT://192.168.1.220:9094  
 num.network.threads=12
 num.io.threads=32
 num.recovery.threads.per.data.dir=1  
-同时新增如下内容：  
-security.inter.broker.protocol = SASL_PLAINTEXT  
+# 同时新增如下内容
+security.inter.broker.protocol=SASL_PLAINTEXT  
 sasl.enabled.mechanisms=PLAIN  
 sasl.mechanism.inter.broker.protocol=PLAIN
 default.replication.factor=3
 unclean.leader.election.enable=false
 num.replica.fetchers=15
+```
 
 ### 3.4 启动程序并初始化
 
@@ -186,10 +214,15 @@ num.replica.fetchers=15
 scp –r /data/confluent-5.0.0 user@ip:/data/
 ```
 
-2.修改其他节点的/opt/confluent/etc/kafka/server.properties文件  
-broker.id=0  （从0开始，按主机依次递增）
+2.修改其他节点的server.properties  
 
-3.各个节点启动kafka 
+```sh
+vi /opt/confluent/etc/kafka/server.properties
+#从0开始，按主机依次递增
+broker.id=1  
+```
+
+3.各个节点启动kafka
 
 ```sh
 cd /data/confluent/bin
@@ -232,15 +265,14 @@ nohup ./connect-distributed ../etc/schema-registry/connect-avro-distributed.prop
 
 ```sh
 cd /data/confluent/bin
-./kafka-topics --create --zookeeper localhost:2181 --replication-factor 1 --partitions 3 --topic test
-#(注意替换zookeeper地址)
+./kafka-topics --create --zookeeper 192.168.1.220:2181 --replication-factor 1 --partitions 3 --topic test
 ```
 
 2.启动消费者：
 
 ```sh
 cd /data/confluent/bin
-./kafka-console-consumer --bootstrap-server 192.168.1.220:9094 --topic test --from-beginning --consumer-property security.protocol=SASL_PLAINTEXT --consumer-property sasl.mechanism=PLAIN  
+./kafka-console-consumer --bootstrap-server 192.168.1.220:9094 --topic test --from-beginning --consumer-property security.protocol=SASL_PLAINTEXT --consumer-property sasl.mechanism=PLAIN
 # 注意需要修改kafka-console-consumer脚本，在倒数第二行增加
 if [ "x$KAFKA_OPTS" ]; then
  export KAFKA_OPTS="-Djava.security.auth.login.config=/data/sasl/kafka_client_jaas.conf"
